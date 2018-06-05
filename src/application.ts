@@ -1,14 +1,21 @@
-import {ApplicationConfig} from '@loopback/core';
-import {RestApplication, RestServer, RestBindings} from '@loopback/rest';
-import {MySequence} from './sequence';
-import { Class, Repository, RepositoryMixin, juggler } from '@loopback/repository';
+import { ApplicationConfig } from '@loopback/core';
+import { RestApplication, RestServer, RestBindings } from '@loopback/rest';
+import { MySequence } from './sequence';
 
 /* tslint:disable:no-unused-variable */
 // Binding and Booter imports are required to infer types for BootMixin!
-import {BootMixin, Booter, Binding} from '@loopback/boot';
-/* tslint:enable:no-unused-variable */
+import { BootMixin, Booter, Binding } from '@loopback/boot';
 
-export class GoldenThreadApiApplication extends BootMixin(RepositoryMixin(RestApplication)) {
+import {
+  Class,
+  Repository,
+  RepositoryMixin,
+  juggler,
+} from '@loopback/repository';
+
+export class GoldenThreadApiApplication extends BootMixin(
+  RepositoryMixin(RestApplication),
+) {
   constructor(options?: ApplicationConfig) {
     super(options);
 
@@ -26,11 +33,25 @@ export class GoldenThreadApiApplication extends BootMixin(RepositoryMixin(RestAp
       },
     };
 
+    this.setupDatasource();
+
+    //connects to mysql database
     var dataSourceConfig = new juggler.DataSource({
       name: "db",
-      connecter: "memory"
+      connector: "loopback-connector-mysql",
+      host: 'localhost',
+      port: 3306,
+      database: 'goldenthread',
+      user: 'root',
+      password: 'DTgpxz38'
     });
     this.dataSource(dataSourceConfig);
+  }
+
+  setupDatasource() {
+    const datasource = this.options && this.options.datasource ?
+      this.juggler.DataSource(this.options.datasource) : "db";
+    this.dataSource(datasource);
   }
 
   async start() {
@@ -41,4 +62,5 @@ export class GoldenThreadApiApplication extends BootMixin(RepositoryMixin(RestAp
     console.log(`Server is running at http://127.0.0.1:${port}`);
     console.log(`Try http://127.0.0.1:${port}/ping`);
   }
+
 }

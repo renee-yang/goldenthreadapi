@@ -1,7 +1,7 @@
 import { ApplicationConfig } from '@loopback/core';
 import { RestApplication } from '@loopback/rest';
-import { Class, Repository, juggler } from '@loopback/repository';
 import { Booter, Binding } from '@loopback/boot';
+import { Class, Repository, juggler } from '@loopback/repository';
 declare const GoldenThreadApiApplication_base: (new (...args: any[]) => {
     [x: string]: any;
     projectRoot: string;
@@ -20,6 +20,7 @@ declare const GoldenThreadApiApplication_base: (new (...args: any[]) => {
 }) & typeof RestApplication;
 export declare class GoldenThreadApiApplication extends GoldenThreadApiApplication_base {
     constructor(options?: ApplicationConfig);
+    setupDatasource(): void;
     start(): Promise<void>;
 }
 export {};

@@ -2,11 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const rest_1 = require("@loopback/rest");
 const sequence_1 = require("./sequence");
-const repository_1 = require("@loopback/repository");
 /* tslint:disable:no-unused-variable */
 // Binding and Booter imports are required to infer types for BootMixin!
 const boot_1 = require("@loopback/boot");
-/* tslint:enable:no-unused-variable */
+const repository_1 = require("@loopback/repository");
 class GoldenThreadApiApplication extends boot_1.BootMixin(repository_1.RepositoryMixin(rest_1.RestApplication)) {
     constructor(options) {
         super(options);
@@ -22,11 +21,23 @@ class GoldenThreadApiApplication extends boot_1.BootMixin(repository_1.Repositor
                 nested: true,
             },
         };
+        this.setupDatasource();
+        //connects to mysql database
         var dataSourceConfig = new repository_1.juggler.DataSource({
             name: "db",
-            connecter: "memory"
+            connector: "loopback-connector-mysql",
+            host: 'localhost',
+            port: 3306,
+            database: 'goldenthread',
+            user: 'root',
+            password: 'DTgpxz38'
         });
         this.dataSource(dataSourceConfig);
+    }
+    setupDatasource() {
+        const datasource = this.options && this.options.datasource ?
+            this.juggler.DataSource(this.options.datasource) : "db";
+        this.dataSource(datasource);
     }
     async start() {
         await super.start();

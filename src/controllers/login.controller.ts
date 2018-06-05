@@ -1,24 +1,43 @@
-import { post, requestBody } from "@loopback/rest";
-import { UserRepository } from "../repositories/user.repository";
-import { User } from "../models/user";
-import { repository } from "@loopback/repository";
+import { repository } from '@loopback/repository';
+import { UserRepository } from '../repositories/user.repository';
+import { User } from '../models/user';
+import {
+  HttpErrors,
+  post,
+  requestBody,
+} from '@loopback/rest';
 
 export class LoginController {
-    constructor(
-        @repository(UserRepository.name) private userRepo: UserRepository) { }
+  constructor(
+    @repository(UserRepository) protected userRepo: UserRepository,
+  ) {}
 
-    @post('/login')
-    async login(@requestBody() login: User) {
-        var users = await this.userRepo.find();
-        var username = login.username;
-        var password = login.password;
-
-        for (var i = 0; i < users.length; i++) {
-            if ((username === users[i].username)
-                && (password == users[i].password)) {
-                return users[i];
-            }
-        }
-        return console.error();
+  @post('/login')
+  async loginUser(@requestBody() user: User): Promise<User> {
+    // Check that email and password are both supplied
+    if (!user.email || !user.password) {
+      throw new HttpErrors.Unauthorized('invalid credentials');
     }
+
+    // Check that email and password are valid
+    let userExists: boolean = !!(await this.userRepo.count({
+      and: [
+        { email: user.email },
+        { password: user.password },
+      ],
+    }));
+
+    if (!userExists) {
+      throw new HttpErrors.Unauthorized('invalid credentials');
+    }
+
+    return await this.userRepo.findOne({
+      where: {
+        and: [
+          { email: user.email },
+          { password: user.password }
+        ],
+      },
+    });
+  }
 }
