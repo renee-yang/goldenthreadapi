@@ -6,17 +6,17 @@ export class Charities extends Entity {
         type: 'number',
         id: true
     })
-    id?: number;
+    charityid?: number;
     
     @property({
         type: 'string'
     })
-    name: string;
+    charityname: string;
 
     @property({
         type: 'string'
     })
-    desc: string;
+    charitydesc: string;
 
     getId() {
         return this.id;
