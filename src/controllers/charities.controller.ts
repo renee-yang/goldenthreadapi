@@ -8,18 +8,19 @@ export class CharitiesController {
        @repository(CharitiesRepository) private charityRepo: CharitiesRepository,
     ) {}
 
-    //be able to add a charity
+    //add a charity
     @post('/charities')
     async addCharity(@requestBody() charity: Charities) {
         return this.charityRepo.create(charity);
     }
 
+    //find all charities
     @get('/charities')
     async findCharities(): Promise<Charities[]> {
         return await this.charityRepo.find();
     }
 
-    //be able to get a charity by id
+    //be able to find a charity by id
     @get('/charities{charityid}')
     async findCharitiesById(@param.path.number('charityid') charityid: number): Promise<Charities> {
 

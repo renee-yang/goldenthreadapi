@@ -6,29 +6,36 @@ export class User extends Entity {
     type: 'number',
     id: true,
   })
-  id?: number;
+  userid?: number;
 
   @property({
     type: 'string',
   })
-  firstname: number;
+  userfirstname: number;
 
   @property({
     type: 'string',
   })
-  lastname: number;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  email: string;
+  userlastname: number;
 
   @property({
     type: 'string',
     required: true,
   })
-  password: string;
+  useremail: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  userpassword: string;
+
+  donation: number;
+  dateFrom: Date;
+
+  getDonation() {
+    return this.donation;
+  }
 
   getId() {
     return this.id;
