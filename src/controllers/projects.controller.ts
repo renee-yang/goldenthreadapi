@@ -32,4 +32,11 @@ export class ProjectsController {
 
         return await this.projectsRepo.findById(id);
     }
+
+    // //find projects by charityid
+    // @get('/projects/{charityid}')
+    // async findProjectByCharityId(@param.path.number('charityid') charityid: number): Promise<Projects> {
+        
+    //     return await this.projectsRepo.
+    // }
 }
